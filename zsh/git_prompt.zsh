@@ -12,8 +12,8 @@ function git-prompt {
 
   rep_status=$(git status 2> /dev/null)
 
-  if [[ -n $(echo $rep_status | grep "^nothing to") ]];then
-    show_current_branch="${fg[cyan]}[${current_branch}]${reset_color}"
+  if [[ -n $(echo $rep_status | grep "^Changes to be committed") ]];then
+    show_current_branch="${fg[green]}[${current_branch}]${reset_color}"
   elif [[ -n $(echo $rep_status | grep "^no changes added to commit") ]]; then 
     show_current_branch="${fg[red]}[${current_branch}]${reset_color}"
   fi
