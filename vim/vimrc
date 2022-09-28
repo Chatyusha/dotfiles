@@ -1,7 +1,74 @@
 set number
 syntax enable
-
+    
 set autoindent
 set tabstop=2
 set shiftwidth=2
+
 set expandtab
+
+"{{ KeyMapping }}"
+
+inoremap <C-e> <Esc>$a
+inoremap <C-a> <Esc>^i
+noremap <C-e> $a
+noremap <C-a> ^i
+tnoremap <Esc> <C-\><C-n>
+
+"{{ Complete }}"
+inoremap " ""<Left>
+inoremap ' ''<Left>
+inoremap { {}<Left>
+inoremap [ []<Left>
+inoremap ( ()<Left>
+inoremap {<CR> {<CR>}<Esc>k$a<CR>
+
+"{{{ Window }}}"
+inoremap <C-l> <Esc><C-w>li
+inoremap <C-h> <Esc><C-w>hi
+inoremap <C-j> <Esc><C-w>ji
+inoremap <C-k> <Esc><C-w>ki
+noremap <C-l> <C-w>l
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+
+let s:jetpackfile = expand('<sfile>:p:h') .. '/pack/jetpack/opt/vim-jetpack/plugin/jetpack.vim'
+let s:jetpackurl = "https://raw.githubusercontent.com/tani/vim-jetpack/master/plugin/jetpack.vim"
+if !filereadable(s:jetpackfile)
+  call system(printf('curl -fsSLo %s --create-dirs %s', s:jetpackfile, s:jetpackurl))
+endif
+
+packadd vim-jetpack
+call jetpack#begin()
+Jetpack 'tani/vim-jetpack', {'opt': 1}
+Jetpack 'Shougo/ddc.vim'
+Jetpack 'vim-denops/denops.vim'
+Jetpack 'Shougo/ddc-matcher_head'
+Jetpack 'Shougo/ddc-around'
+Jetpack 'Shougo/ddc-sorter_rank'
+Jetpack 'prabirshrestha/vim-lsp'
+Jetpack 'mattn/vim-lsp-settings'
+Jetpack 'shun/ddc-vim-lsp'
+call jetpack#end()
+
+for name in jetpack#names()
+  if !jetpack#tap(name)
+    call jetpack#sync()
+    break
+  endif
+endfor
+
+call ddc#custom#patch_global('sources', ['around','vim-lsp'])
+
+call ddc#custom#patch_global('sourceOptions', {
+    \ '_': {
+    \     'matchers': ['matcher_head'],
+    \ },
+    \ 'vim-lsp': {
+    \     'matchers': ['matcher_head'],
+    \     'mark': 'lsp',
+    \}})
+
+call ddc#enable()
+
